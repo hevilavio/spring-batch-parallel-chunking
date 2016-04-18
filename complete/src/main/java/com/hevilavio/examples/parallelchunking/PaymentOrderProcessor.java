@@ -1,33 +1,44 @@
-package com.hevilavio.examples.posystem;
+package com.hevilavio.examples.parallelchunking;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.UUID;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.batch.item.ItemProcessor;
 
 /**
  * Created by hevilavio on 4/18/16.
  */
-public class PaymentOrderProcessor implements ItemProcessor<PaymentOrder, Void> {
+@Slf4j
+public class PaymentOrderProcessor implements ItemProcessor<PaymentOrder, PaymentOrder> {
 
-    private final String exchangeFolder = "/home/hevilavio/workspace/github";
+    private final String exchangeFolder = "/home/hevilavio/workspace/github/spring-batch-parallel-chunking/out/";
+    private final String uniqueExchangeFolder;
+
+    public PaymentOrderProcessor() {
+        this.uniqueExchangeFolder = Paths.get(exchangeFolder, UUID.randomUUID().toString()).toString();
+
+        new File(uniqueExchangeFolder).mkdirs();
+    }
 
     @Override
-    public Void process(PaymentOrder paymentOrder) throws Exception {
-
-
+    public PaymentOrder process(PaymentOrder paymentOrder) throws Exception {
+        log.info("processing orderId {}", paymentOrder.getOrderId());
         String contentForFileExchange = paymentOrder.getContentForFileExchange();
         String filename = paymentOrder.getSupposedFilename();
 
         writeFile(contentForFileExchange, filename);
 
-        simulateDelay();
+//        simulateDelay();
 
-        return null;
+        return paymentOrder;
     }
 
     private void simulateDelay() throws InterruptedException {
@@ -37,7 +48,7 @@ public class PaymentOrderProcessor implements ItemProcessor<PaymentOrder, Void> 
 
     private void writeFile(String contentForFileExchange, String filename) throws IOException {
 
-        Path path = Paths.get(exchangeFolder, filename);
+        Path path = Paths.get(uniqueExchangeFolder, filename);
 
         BufferedOutputStream outputStream = new BufferedOutputStream(
             Files.newOutputStream(path, StandardOpenOption.CREATE_NEW));

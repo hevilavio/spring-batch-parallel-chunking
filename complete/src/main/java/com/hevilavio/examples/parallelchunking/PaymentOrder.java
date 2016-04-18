@@ -1,35 +1,34 @@
-package com.hevilavio.examples.posystem;
+package com.hevilavio.examples.parallelchunking;
 
 /**
  * Created by hevilavio on 4/18/16.
  */
 public class PaymentOrder {
+    private Integer orderId;
     private Integer clientIdFrom;
     private Integer clientIdTo;
     private String ammount;
 
-    public PaymentOrder(Integer clientIdFrom, Integer clientIdTo, String ammount) {
+    public PaymentOrder(Integer orderId, Integer clientIdFrom, Integer clientIdTo, String ammount) {
+        this.orderId = orderId;
         this.clientIdFrom = clientIdFrom;
         this.clientIdTo = clientIdTo;
         this.ammount = ammount;
+    }
+
+    public Integer getOrderId() {
+        return orderId;
     }
 
     public Integer getClientIdFrom() {
         return clientIdFrom;
     }
 
-    public Integer getClientIdTo() {
-        return clientIdTo;
-    }
-
-    public String getAmmount() {
-        return ammount;
-    }
-
     public String getContentForFileExchange() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("T");
+        sb.append(",");
         sb.append(clientIdFrom);
         sb.append(",");
         sb.append(clientIdTo);
@@ -40,7 +39,6 @@ public class PaymentOrder {
     }
 
     public String getSupposedFilename() {
-        int random = (int)(Math.random() * 1000);
-        return "OP_" + random + ".in";
+        return "OP_" + orderId + ".in";
     }
 }
