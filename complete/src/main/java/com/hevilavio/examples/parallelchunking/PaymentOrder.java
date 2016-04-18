@@ -1,28 +1,18 @@
 package com.hevilavio.examples.parallelchunking;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * Created by hevilavio on 4/18/16.
  */
+@Getter
+@AllArgsConstructor
 public class PaymentOrder {
     private Integer orderId;
     private Integer clientIdFrom;
     private Integer clientIdTo;
     private String ammount;
-
-    public PaymentOrder(Integer orderId, Integer clientIdFrom, Integer clientIdTo, String ammount) {
-        this.orderId = orderId;
-        this.clientIdFrom = clientIdFrom;
-        this.clientIdTo = clientIdTo;
-        this.ammount = ammount;
-    }
-
-    public Integer getOrderId() {
-        return orderId;
-    }
-
-    public Integer getClientIdFrom() {
-        return clientIdFrom;
-    }
 
     public String getContentForFileExchange() {
         StringBuilder sb = new StringBuilder();

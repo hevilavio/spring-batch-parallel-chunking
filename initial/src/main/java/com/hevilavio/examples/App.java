@@ -58,7 +58,7 @@ public class App {
         log.info("Starting job execution");
 
         TaskletStep taskletStep = stepBuilderFactory
-            .get("taskletName")
+            .get("jobName")
             .<PaymentOrder, PaymentOrder>chunk(10)
             .reader(PaymentOrderReader.getReader())
             .processor(new PaymentOrderProcessor())
@@ -83,4 +83,6 @@ public class App {
         builder.addLong("time", Calendar.getInstance().getTimeInMillis());
         return builder.toJobParameters();
     }
+
+
 }
